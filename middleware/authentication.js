@@ -13,12 +13,14 @@ const Authentication = async (req, res, next) => {
     if (token) {
       const decoded = await jwt.verify(token, secret, (err, decoded) => {
         if (err)
-          return res.json({ message: "Invalid token", err: err.message });
+          return res
+            .status(401)
+            .json({ message: "Invalid token", err: err.message });
         if (decoded?.userId.length > 0) {
           req.body.userId = decoded.userId;
           next();
         } else {
-          res.status(404).json({ message: "token Exprired" });
+          res.status(401).json({ message: "Invalid token" });
         }
       });
     } else {

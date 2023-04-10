@@ -32,14 +32,16 @@ const login = async (req, res) => {
     let isCorrectPassword = bcrypt.compareSync(password, userFound.password);
     if (isCorrectPassword) {
       // generate token
-      const token = jwt.sign({ userId: userFound._id }, secret);
+      const token = jwt.sign({ userId: userFound._id }, secret, {
+        expiresIn: "1h",
+      });
       res.status(200).send({ message: "Login Success", token: token });
     } else {
       return res.status(401).json({ message: "Wrong password" });
     }
   } catch (err) {
     res.status(500).json({
-      message: "something went wrong please try again later",
+      message: "Something went wrong please try again later",
       err: err.message,
     });
   }
